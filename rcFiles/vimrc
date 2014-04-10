@@ -1,0 +1,117 @@
+" SETTINGS =================================================================
+
+set noerrorbells        " no error bells
+set ignorecase          " ignore case in search patterns
+
+"Show hidden characters
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+
+"Show line numbers
+set number
+
+"Autoindent with 4 spaces
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+"Limit the width of text to 80 characters
+set ruler
+set textwidth=80
+
+"Enable folding and always start unfold
+set foldmethod=syntax
+au BufRead * normal zR
+
+" Ctags Configuration
+"set tags=$HOME/vimtags;
+filetype plugin on
+
+" Tagbar Config
+let tagbar_left = 1
+
+" Function for open NERDTree + Tagbar + MiniBufExplorer
+function! s:LayoutWindows()
+    execute 'NERDTree'
+    let nerdtree_buffer = bufnr(t:NERDTreeBufName)
+    execute 'wincmd q'
+    execute 'TagbarOpen'
+    execute 'wincmd h'
+    execute 'split'
+    execute 'b' . nerdtree_buffer
+
+    let mbe_window = bufwinnr("-MiniBufExplorer-")
+    if mbe_window != -1
+        execute mbe_window . "wincmd w"
+        execute 'wincmd K'
+    endif
+
+    execute 'resize +17'
+    execute 'wincmd l'
+endfunction
+
+" By default open files with NERDTree + Tagbar + MiniBufExplorer
+autocmd VimEnter * call<SID>LayoutWindows()
+
+" MiniBufExplorer bug fixing
+au BufEnter * call MyLastWindow()
+function! MyLastWindow()
+    " if the window is quickfix go on
+    if &buftype=="nofile"
+        " if this window is last on screen quit without warning
+        if winnr('$') < 4
+            NERDTreeClose
+            TagbarClose
+            quit!
+        endif
+    endif
+endfunction
+
+function! s:CommentLine()
+    execute 's/^/\/\*/'
+    execute 's/$/\*\//'
+endfunction
+
+function! s:RemoveLineComment()
+    execute 's/\/\*//e'
+    execute 's/\*\///e'
+endfunction
+
+command! -nargs=0 CommentLine :call s:CommentLine()
+command! -nargs=0 RemoveLineComment :call s:RemoveLineComment()
+
+nmap <silent> <F7> :CommentLine<CR>
+nmap <silent> <F8> :RemoveLineComment<CR>
+
+" MiniBufExplorer Config
+let g:miniBufExplModSelTarget = 1
+let g:miniBufExplorerMoreThanOne = 0
+
+" MAPS =====================================================================
+
+" Highlight searched words
+nnoremap <silent> <F2> :set hlsearch!<CR>
+
+" Show hidden characters
+nmap <silent> <F3> :set list!<CR>
+
+" Save & Quit
+nmap <F4> :x<CR>
+imap <F4> <C-O>:x<CR>
+
+" Toogle fold at cursor
+nmap <F5> za
+imap <F5> <C-O>za
+omap <F5> <C-C>za
+
+" Remove all folds
+nmap <S-F5> zR
+imap <S-F5> <C-O>zR
+omap <S-F5> <C-C>zR
+
+" Toogle auto-wrap
+set sr fo=tc
+nmap <F6> :setl sr! fo<C-R>=strpart("-+",&sr,1)<CR>=tc<CR>
+
+" Syntax highlight ===========================================================
+colorscheme desert "load a color scheme
