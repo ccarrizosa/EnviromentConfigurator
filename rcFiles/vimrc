@@ -99,7 +99,7 @@ nmap <silent> <F3> :set list!<CR>
 nmap <F4> :x<CR>
 imap <F4> <C-O>:x<CR>
 
-" Toogle fold at cursor
+" Toggle fold at cursor
 nmap <F5> za
 imap <F5> <C-O>za
 omap <F5> <C-C>za
@@ -109,7 +109,7 @@ nmap <S-F5> zR
 imap <S-F5> <C-O>zR
 omap <S-F5> <C-C>zR
 
-" Toogle auto-wrap
+" Toggle auto-wrap
 set sr fo=tc
 nmap <F6> :setl sr! fo<C-R>=strpart("-+",&sr,1)<CR>=tc<CR>
 
