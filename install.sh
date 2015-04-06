@@ -2,7 +2,7 @@
 
 PLUGINS=( https://github.com/scrooloose/nerdtree.git \
           https://github.com/majutsushi/tagbar.git   \
-          https://github.com/scrooloose/nerdtree.git )
+          https://github.com/fholgado/minibufexpl.vim.git )
 
 installPlugin(){
   echo "Trying to install ${1##*/}"
